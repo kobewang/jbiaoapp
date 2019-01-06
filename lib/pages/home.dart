@@ -30,6 +30,17 @@ class HomeState extends State<Home> {
       ),
       body:
       new SmartRefresher(
+        headerBuilder: (context,mode){
+          return new ClassicIndicator(
+            mode: mode,
+            height: 45.0,
+            releaseText: '松开手刷新',
+            refreshingText: '刷新中',
+            completeText: '刷新完成',
+            failedText: '刷新失败',
+            idleText: '下拉刷新',
+          );
+        },
         enablePullDown: true,
         enablePullUp: true,
         onRefresh: _onRefresh,
