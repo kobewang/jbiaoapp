@@ -29,6 +29,7 @@ class HomeState extends State<Home> {
         automaticallyImplyLeading: false,//无返回箭头
       ),
       body:
+      
       new SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
