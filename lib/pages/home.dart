@@ -4,12 +4,12 @@ import 'package:flutter/cupertino.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import 'package:jbiaoapp/widgets/searchbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  HomeState createState()=> HomeState();
+  HomePageState createState()=> HomePageState();
 }
 
-class HomeState extends State<Home> {
+class HomePageState extends State<HomePage> {
   RefreshController _refreshController;  
   
   void _onRefresh(bool up){

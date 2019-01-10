@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:jbiaoapp/pages/home.dart';
 import 'package:jbiaoapp/pages/tmlist.dart';
+import 'package:jbiaoapp/pages/detail.dart';
+import 'package:jbiaoapp/pages/message.dart';
 
 //void main() => runApp(MyApp());
 
@@ -12,7 +14,8 @@ void main() {
       theme: new ThemeData(
         //primaryColor:Colors.lightBlueAccent,
       ),
-      home: new MyApp(),
+      //home: new MyApp(),
+      home: new MessagePage(),
     ),
   );
 }
@@ -42,10 +45,11 @@ class MyAppState extends State<MyApp> {
     ),
   ];
   final List tabBodies = [
-    new TmList(),
-    new Home(),
-    new Home(),
-    new Home()
+    new DetailPage(),
+    new TmListPage(),
+    new HomePage(),
+    //new Home(),
+    new HomePage()
   ];
   var currentIndex = 0;
   var currentPage;

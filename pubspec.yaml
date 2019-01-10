@@ -22,6 +22,7 @@ dependencies:
   pull_to_refresh: ^1.1.6
   carousel_slider: ^1.0.1
   dropdown_menu: ^1.1.1
+  timeline: ^0.0.1  
 
 dev_dependencies:
   flutter_test:

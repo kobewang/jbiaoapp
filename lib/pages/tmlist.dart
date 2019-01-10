@@ -68,13 +68,72 @@ const  TYPES = [
 {"title": "45.社会法律", "id": 45},
 ];
 
-class TmList extends StatefulWidget {
+class TmListPage extends StatefulWidget {
   @override
-  createState() => TmListState();
+  createState() => TmListPageState();
 }
 
-class TmListState extends State<TmList> {
+class TmListPageState extends State<TmListPage> {
 
+  Widget searchBar() {
+  return new Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      Expanded(
+        child: Card(                
+          child: Container(
+            height: 20.0,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 200.0,                  
+                  child: Center(
+                    child: Form(
+                      autovalidate: false,
+                      child: 
+                      new Column(
+                        children: <Widget>[
+                        TextFormField(
+                          style:
+                            new TextStyle(color: Colors.teal),
+                              textAlign: TextAlign.start,
+                              decoration: InputDecoration.collapsed(
+                                fillColor: Colors.white,                   
+                                hintText: '输入商标名称或注册号',
+                                hintStyle: TextStyle(fontSize: 12.0,color: Colors.black45),                                            
+                                filled: false,                             
+                              ),
+                          ),
+                        ],
+                      )                      
+                    ),
+                  ),
+                )
+              ],
+              )         
+            )                  
+        )
+              
+      ),
+      new Container(
+        margin: EdgeInsets.only(left: 0.0, right: 10.0),                                                
+        height: 20.0,
+        width: 50.0,                                                
+        child:                      
+          RaisedButton(                        
+            color: Colors.orange,
+            child: new Text("查询",style: TextStyle(fontSize: 12.0)),                                                                             
+            padding: EdgeInsets.fromLTRB(1.0, 0.0, 1.0, 0.0),
+            highlightColor: Colors.blue[700],
+            colorBrightness: Brightness.dark,
+            splashColor: Colors.grey,                        
+            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),                        
+            onPressed: () => {},
+          )
+        )                     
+      ],
+    );
+  }
   //头部drop
   DropdownHeader buildDropdownHeader({DropdownMenuHeadTapCallback onTap}) {
     return new DropdownHeader(
@@ -131,7 +190,7 @@ class TmListState extends State<TmList> {
           //左边商标图
           Container(
             margin: EdgeInsets.all(5.0),
-            child: new Image.network('https://img.32.cn/Public/Images/201703/20170302125435-4105.jpg',width: 120.0,height: 80.0,fit: BoxFit.fill)
+            child: new Image.network('https://img.32.cn/Public/Images/201703/20170302125435-4105.jpg',width: 120.0,height: 90.0,fit: BoxFit.fill)
           ),
           //右边简介,4行
           Expanded(
@@ -155,12 +214,17 @@ class TmListState extends State<TmList> {
                   ),
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[                 
-                        Text('范围：可下载的影像文件，的范德萨发范德萨范德萨，范德萨范德萨范德萨范德萨',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 12.0,color: Colors.grey)
-                        )                                       
+                    children: <Widget>[
+                        Container(
+                          width: 250.0,
+                          child: 
+                          Text('范围：可下载的影像文件，的范德萨发范德萨范德萨，范德萨范德萨范德萨范德萨',                        
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12.0,color: Colors.grey)
+                          )        
+                        )
+                                                       
                       ],
                   ),
                   new Row(
@@ -198,7 +262,7 @@ class TmListState extends State<TmList> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: Text('列表'),
+        title: searchBar(),              
       ),
       body: new DefaultDropdownMenuController(
         child: new Column(
