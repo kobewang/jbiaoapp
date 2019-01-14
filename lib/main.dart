@@ -4,6 +4,8 @@ import 'package:jbiaoapp/pages/home.dart';
 import 'package:jbiaoapp/pages/tmlist.dart';
 import 'package:jbiaoapp/pages/detail.dart';
 import 'package:jbiaoapp/pages/message.dart';
+import 'package:jbiaoapp/pages/news.dart';
+import 'package:jbiaoapp/pages/webview.dart';
 
 //void main() => runApp(MyApp());
 
@@ -15,7 +17,10 @@ void main() {
         //primaryColor:Colors.lightBlueAccent,
       ),
       //home: new MyApp(),
-      home: new MessagePage(),
+      //home: new MessagePage(),
+      //home: new DetailPage(),
+      home: new NewsPage(),
+      //home: new WebView(url: 'https://www.22.cn')
     ),
   );
 }

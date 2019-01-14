@@ -8,16 +8,14 @@ class MessagePage extends StatefulWidget {
 class MessagePageState extends State<MessagePage> {
   Widget certPic(String picUrl,String topTitle,String bottomTitle) {
       return new Stack(
-        children: <Widget>[
-            //Container(child: new Image.network('http://www.360dlzx.com/upfiles/member/auth/395-2015042018105863.jpg',width: MediaQuery.of(context).size.width/2-20),
+        children: <Widget>[            
           Container(child: new Image.network(picUrl,width: MediaQuery.of(context).size.width/2-20),
             decoration: new BoxDecoration(
               border: new Border.all(color: Colors.black,width: 1.0),
               //shape: BoxShape.circle,
               borderRadius: new BorderRadius.circular(2.0)
             ),
-            )
-          ,
+            ),
           new Positioned(
             left: 10.0,
             bottom: 10.0,
@@ -35,7 +33,7 @@ class MessagePageState extends State<MessagePage> {
     return new Container(
       height: 100.0,   
       width: MediaQuery.of(context).size.width/3-20,
-      //color: Colors.white,
+      //color: Colors.white, 这个颜色不能加，会和decoration冲突
       decoration: new BoxDecoration(
         shape: BoxShape.rectangle,                    
         boxShadow: [
@@ -67,7 +65,10 @@ class MessagePageState extends State<MessagePage> {
         new Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text('您需要提供一下材料，经济会为您准备交易材料')
+            Container(
+              margin: new EdgeInsets.only(left:15.0,bottom: 10.0),
+              child: Text('您需要提供一下材料，经济会为您准备交易材料')
+            )            
           ],
         ),
         new Row(
@@ -80,7 +81,10 @@ class MessagePageState extends State<MessagePage> {
         new Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text('转让成功后，您将获得')
+            Container(
+              margin: new EdgeInsets.only(left:15.0,top:10.0,bottom: 10.0),
+              child:Text('转让成功后，您将获得')
+            )
           ],
         ),
         new Row(
