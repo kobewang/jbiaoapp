@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-class BottomBar extends StatelessWidget {
+import 'package:url_launcher/url_launcher.dart';
+class BottomBar extends StatefulWidget {
+  int tmId;
+  String mobile;
+  @override
+  BottomBar({Key key,this.tmId,this.mobile}):super(key:key);
+  createState ()=> BottomBarState();
+}
+class BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return
@@ -20,7 +28,13 @@ class BottomBar extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.contact_phone,size: 16.0,color: Colors.grey),
-                          Text('联系客服',style: TextStyle(fontSize: 12.0,color: Colors.grey))
+                          GestureDetector(
+                            child: Text('联系客服',style: TextStyle(fontSize: 12.0,color: Colors.grey)),
+                            onTap: (){                                                             
+                              _launchURL('tel:${widget.mobile}');
+                              print('联系客服:${widget.mobile}');
+                            },
+                          )                          
                         ],
                       )                      
                     ]
@@ -47,7 +61,8 @@ class BottomBar extends StatelessWidget {
               ),
               Expanded(child: 
                 Container(
-                  color: Color(0XFFca0c16),
+                  //color: Color(0XFFca0c16),
+                  color: Colors.blue,
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -56,8 +71,7 @@ class BottomBar extends StatelessWidget {
                         children: <Widget>[
                           Text('我要购买',style: TextStyle(color: Colors.white),)
                         ],
-                      )
-                      
+                      )                      
                     ],
                   )
                 )
@@ -68,4 +82,12 @@ class BottomBar extends StatelessWidget {
         )       
       );        
   }
+  _launchURL(url) async {  
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
 }

@@ -142,12 +142,9 @@ class NewsListsState extends State<NewsLists> {
           list1.add(json.decode('{"Title":"${Constants.END_LINE_TAG}"}'));
         }
         else {
-          isNoMore = false;
-          //_refreshController.sendBack(false, RefreshStatus.idle); 
-        }
-        print('***isNoMore:${isNoMore} ,totalCount:${totalCount} list1.length:${list1.length}');
-        listData = list1;            
-         //_refreshController.sendBack(false, RefreshStatus.idle);
+          isNoMore = false;          
+        }        
+        listData = list1;                     
       });    
     });
   }
@@ -202,6 +199,7 @@ class NewsListsState extends State<NewsLists> {
   buildListItem(BuildContext context, int index) {
     var greyTextStyle = new TextStyle(fontSize: 12.0,color: Colors.grey);
     var title = listData[index]['Title'];
+    //我是有底线的
     if(title == Constants.END_LINE_TAG) {
       return new Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -216,7 +214,7 @@ class NewsListsState extends State<NewsLists> {
     var addtime = listData[index]['Addtime'];    
     var views =  listData[index]['Views'].toString();
     var likes =  listData[index]['Likes'].toString();    
-    var titleRow = new Container(      
+    var titleRow = new Container(              
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,      
         children: <Widget>[
@@ -259,14 +257,15 @@ class NewsListsState extends State<NewsLists> {
         ]
       )  
     );    
-    var item = new Padding(
+    var item = new Container(
+      color: Colors.white,      
+      margin: EdgeInsets.only(bottom: 10.0),
       padding: EdgeInsets.all(10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[               
           titleRow,
-          timeRow,
-          new Divider(height: 1.0)
+          timeRow        
         ]
       )
     );
@@ -274,7 +273,7 @@ class NewsListsState extends State<NewsLists> {
       child: item,
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(
-          builder: (ctx) => new WebView(title: '资讯加载..',url: 'https://m.jbiao.cn/news/${id}')
+          builder: (ctx) => new WebView(title: '资讯加载..',url: 'https://m.jbiao.cn/news/${id}?from=app')
         ));
       }
     );      

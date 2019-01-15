@@ -1,13 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dropdown_menu/dropdown_menu.dart';
+import 'package:jbiaoapp/config/api.dart';
+import 'package:jbiaoapp/config/constants.dart';
+import 'package:jbiaoapp/pages/detail.dart';
+import 'package:jbiaoapp/util/NetUtils.dart';
+import "package:pull_to_refresh/pull_to_refresh.dart";
 const int PRICE_INDEX = 0;
 const int TYPE_INDEX = 0;
 const int ORDER_INDEX = 0;
 const ORDERS = [
   {"title": "综合排序","id": 0},
-  {"title": "人气","id": 1},
-  {"title": "最新","id": 2},
+  {"title": "最新","id": 1},
+  {"title": "人气","id": 2},
   {"title": "推荐","id": 3}
 ];
 
@@ -74,7 +81,7 @@ class TmListPage extends StatefulWidget {
 }
 
 class TmListPageState extends State<TmListPage> {
-
+  final TextEditingController controller = new TextEditingController();
   Widget searchBar() {
   return new Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +100,7 @@ class TmListPageState extends State<TmListPage> {
                       child: 
                       new Column(
                         children: <Widget>[
-                        TextFormField(
+                        TextField(
                           style:
                             new TextStyle(color: Colors.teal),
                               textAlign: TextAlign.start,
@@ -103,7 +110,16 @@ class TmListPageState extends State<TmListPage> {
                                 hintStyle: TextStyle(fontSize: 12.0,color: Colors.black45),                                            
                                 filled: false,                             
                               ),
-                          ),
+                          onChanged: (String content){
+                            setState(() {
+                              keyWords = content;                              
+                            });
+                          },
+                          onSubmitted: (String content){
+                            keySearch(content);
+                          }, 
+                          controller: controller,                             
+                          ),                          
                         ],
                       )                      
                     ),
@@ -112,8 +128,7 @@ class TmListPageState extends State<TmListPage> {
               ],
               )         
             )                  
-        )
-              
+        )              
       ),
       new Container(
         margin: EdgeInsets.only(left: 0.0, right: 10.0),                                                
@@ -128,14 +143,16 @@ class TmListPageState extends State<TmListPage> {
             colorBrightness: Brightness.dark,
             splashColor: Colors.grey,                        
             //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),                        
-            onPressed: () => {},
+            onPressed: (){
+               keySearch(keyWords);
+            }
           )
         )                     
       ],
     );
-  }
+  }  
   //头部drop
-  DropdownHeader buildDropdownHeader({DropdownMenuHeadTapCallback onTap}) {
+  DropdownHeader buildDropdownHeader({DropdownMenuHeadTapCallback onTap}) {    
     return new DropdownHeader(
       onTap: onTap,
       titles: [TYPES[TYPE_INDEX],PRICES[PRICE_INDEX],ORDERS[ORDER_INDEX]]
@@ -179,8 +196,23 @@ class TmListPageState extends State<TmListPage> {
       ],
     );
   }
+  //listItemWidget构造
   Widget listItem(BuildContext context,int index) {
-    return 
+    var title = listData[index]['TmName'];
+    //我是有底线的
+    if(title == Constants.END_LINE_TAG) {
+      return new Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('---  ${Constants.END_LINE_TAG}  ---')
+        ],
+      );
+    }
+    var itemWidget = 
+    new Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      color: Colors.white,
+      child:     
     new Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -190,7 +222,7 @@ class TmListPageState extends State<TmListPage> {
           //左边商标图
           Container(
             margin: EdgeInsets.all(5.0),
-            child: new Image.network('https://img.32.cn/Public/Images/201703/20170302125435-4105.jpg',width: 120.0,height: 90.0,fit: BoxFit.fill)
+            child: new Image.network(listData[index]['TmImg'],width: 120.0,height: 90.0,fit: BoxFit.fill)
           ),
           //右边简介,4行
           Expanded(
@@ -201,14 +233,19 @@ class TmListPageState extends State<TmListPage> {
                 children: <Widget>[
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[Text('商标名称',style:TextStyle(fontWeight: FontWeight.bold))],
+                    children: <Widget>[
+                      Text(listData[index]['TmName'],style:TextStyle(fontWeight: FontWeight.bold)),
+                      Container(
+                        margin: EdgeInsets.only(left: 15.0,top: 3.0),
+                        child: Text('注册号:${listData[index]['RegNo']}',style: TextStyle(fontSize: 10.0,color: Colors.grey)))
+                      ],
                   ),
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                        child: Text('分类:第6类',style: TextStyle(fontSize: 12.0))
+                        child: Text('分类:第${listData[index]['Type']}类',style: TextStyle(fontSize: 12.0))
                       )                      
                       ],
                   ),
@@ -218,13 +255,12 @@ class TmListPageState extends State<TmListPage> {
                         Container(
                           width: 250.0,
                           child: 
-                          Text('范围：可下载的影像文件，的范德萨发范德萨范德萨，范德萨范德萨范德萨范德萨',                        
+                          Text(listData[index]['UseRange'],                        
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 12.0,color: Colors.grey)
                           )        
-                        )
-                                                       
+                        )                                                       
                       ],
                   ),
                   new Row(
@@ -241,9 +277,8 @@ class TmListPageState extends State<TmListPage> {
                           padding: EdgeInsets.fromLTRB(1.0, 0.0, 1.0, 0.0),
                           highlightColor: Colors.blue[700],
                           colorBrightness: Brightness.dark,
-                          splashColor: Colors.grey,                        
-                          //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),                        
-                          onPressed: () => {},
+                          splashColor: Colors.grey,                                                  
+                          onPressed: () {routeToDetail(listData[index]['Id']);},
                         )
                       )                     
                     ],
@@ -253,11 +288,169 @@ class TmListPageState extends State<TmListPage> {
             )            
           )
         ],
-      ),
-      Divider(height: 50.0,color: Colors.black12,)
+      )      
       ]
-    );  
+    )
+    );
+    return InkWell(child: itemWidget,onTap: (){
+      routeToDetail(listData[index]['Id']);  
+    });
   }
+  void routeToDetail(int tId) {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new DetailPage(tmId: tId)));
+  }
+  var keyWords = '';
+  var listData;
+  var isNoMore = false;
+  final int pageSize = 10;
+  var tmType = 0;
+  var minPrice = 0;
+  var maxPrice = 0;
+  var sortType = 0;
+  var curPageIndex = 1;
+  var totalCount = 0;
+  //关键字搜索
+  void keySearch(String keyStr) {
+    keyWords = keyStr;
+    curPageIndex = 1;
+    getTmList();
+  }
+  RefreshController _refreshController;    
+  void _onRefresh(bool up){
+    print('*****isNoMore:$isNoMore');
+	  if (up){      
+      print('往下加载首页');
+      curPageIndex = 1;
+      getTmList();      
+      new Future.delayed(const Duration(milliseconds: 2009)).then((val) {    
+        //_refreshController.scrollTo(_refreshController.scrollController.offset+100.0);
+        _refreshController.sendBack(true, RefreshStatus.completed);
+        setState(() {});
+      });      
+    }
+    else {
+      print('往上加载下一页');
+      if(isNoMore) {
+        print('到底了 没有更多了..');
+        setState(() {
+         _refreshController.sendBack(false, RefreshStatus.completed);         
+                });
+        return;
+      }
+      curPageIndex++;
+      getTmList();      
+      new Future.delayed(const Duration(milliseconds: 2009))
+        .then((val) {                  
+          setState(() {});
+            _refreshController.sendBack(false, RefreshStatus.idle);
+        });
+    }
+  }
+  void enterRefresh() {
+    _refreshController.requestRefresh(true);
+  }
+  void _onOffsetCallback(bool isUp, double offset) {
+    // if you want change some widgets state ,you should rewrite the callback
+  }
+  @override
+  void initState() {
+    _refreshController = new RefreshController();    
+    super.initState();
+    getTmList();
+  }
+ //请求API
+  getTmList() {
+    String url = Api.TMLIST;    
+    var postParam = {
+    "pageListRequest": {
+      "LastId": 0,
+      "PageSize": pageSize,
+      "Sort": "",
+      "KeyWord": "",
+      "PageIndex": curPageIndex
+      },
+    "Type": tmType,
+    "PageIndex": curPageIndex,
+    "KeyWord": keyWords,
+    "Min": minPrice,
+    "Max": maxPrice,
+    "Years": 0,
+    "ChType": 0,
+    "ReType": "",
+    "GroupIds": "",
+    "SortType": sortType
+    };
+    NetUtils.post(url,postParam).then((data) {      
+      setState(() {                        
+        List list1 = new List();
+        int totalCount = json.decode(data)['Data']['Count'];
+        if(curPageIndex == 1){
+          listData = null;
+          listData = new List();
+          list1 = json.decode(data)['Data']['List'];
+        }
+        else {                    
+          list1.addAll(listData);
+          list1.addAll(json.decode(data)['Data']['List']);             
+        }
+        if(totalCount <= list1.length) {          
+          isNoMore = true;          
+          list1.add(json.decode('{"TmName":"${Constants.END_LINE_TAG}"}'));
+        }
+        else {
+          isNoMore = false;          
+        }        
+        listData = list1;                     
+      });    
+    });
+  }
+
+  listItemWidgets() {
+    if (listData == null) {
+      //无数据显示Loading
+      return new Center(
+        child: new CircularProgressIndicator()
+      );
+    } else {
+      return new SmartRefresher(
+      headerBuilder: (context,mode) {
+        return new ClassicIndicator(
+          mode: mode,
+          height: 45.0,
+          releaseText: '松开手刷新',
+          refreshingText: '刷新中',
+          completeText: '刷新完成',
+          failedText: '刷新失败',
+          idleText: '下拉刷新',
+        );
+      },
+      footerBuilder: (context,mode) {
+        return new ClassicIndicator(
+          mode: mode,
+          height: 45.0,
+          releaseText: '松开手刷新',
+          refreshingText: '刷新中',
+          completeText: '刷新完成',
+          failedText: '刷新失败',
+          idleText: '下拉刷新',
+        );
+      },
+      enablePullDown: true,
+      enablePullUp: true,
+      controller: _refreshController,
+      onRefresh: _onRefresh,            
+      onOffsetChange: _onOffsetCallback,
+      child:new ListView.builder(
+        physics: ScrollPhysics(),  
+        shrinkWrap: true,
+        itemCount: listData.length,
+        itemBuilder: (context,index) { return listItem(context, index); },
+        )
+      );
+      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -265,18 +458,38 @@ class TmListPageState extends State<TmListPage> {
         title: searchBar(),              
       ),
       body: new DefaultDropdownMenuController(
+        onSelected:  ({int menuIndex, int index, int subIndex, dynamic data}) {
+          //菜单选择
+          print("menuIndex:$menuIndex index:$index subIndex:$subIndex data:$data");
+          if(menuIndex == 0 ) {
+            tmType = index;            
+          } else if(menuIndex == 1) {
+            switch(index) {
+              case 0: minPrice=0;maxPrice=0;break;//所有
+              case 1: minPrice=0;maxPrice=10000;break;//<1w
+              case 2: minPrice=10000;maxPrice=30000;break;//1-3w
+              case 3: minPrice=30000;maxPrice=50000;break;//3-5w
+              case 4: minPrice=50000;maxPrice=100000;break;//5-10w
+              case 5: minPrice=100000;maxPrice=1000000;break;//>10w
+            }
+          } else {
+            switch(index) {
+              case 0: sortType = 0; break;//综合排序
+              case 1: sortType = 1; break;//最新
+              case 2: sortType = 2; break;//人气
+              case 3: sortType = 3; break;//推荐
+            }
+          }
+          curPageIndex = 1;
+          getTmList();
+        },
         child: new Column(
           children: <Widget>[
             buildDropdownHeader(),            
             new Expanded(
               child: new Stack(
                 children: <Widget>[
-                  new ListView.builder(
-                    physics: ScrollPhysics(),  
-                    shrinkWrap: true,
-                    itemCount: 30,
-                    itemBuilder: (context,index) { return listItem(context, index); },
-                  ),
+                  listItemWidgets(),
                   buildDropdownMenu()
                 ],
               ),

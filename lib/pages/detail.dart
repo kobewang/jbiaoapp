@@ -1,30 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jbiaoapp/config/api.dart';
+import 'package:jbiaoapp/util/NetUtils.dart';
 import 'package:jbiaoapp/widgets/bottombar.dart';
 import 'package:timeline/model/timeline_model.dart';
 import 'package:timeline/timeline.dart';
 
 class DetailPage extends StatefulWidget {
+  int tmId;
+  DetailPage({Key key,this.tmId}) : super(key:key);
   @override
   createState ()=> DetailPageState();
 }
-
-
-
 class DetailPageState extends State<DetailPage> with SingleTickerProviderStateMixin{
+  var tmData;
   TabController tabController;
     void initState() {
     super.initState();
     tabController = TabController(
       length: 3,
       vsync: this
-    );    
+    );
+    getTmDetail();    
+  }
+
+  getTmDetail() {
+    String url = Api.TMDETAIL;    
+    var postParam = {
+      "Id": widget.tmId
+    };
+    NetUtils.post(url,postParam).then((data) {      
+      setState(() {                        
+        tmData = json.decode(data)['Data'];                         
+      });    
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    tabController.dispose();
+    tabController.dispose();    
   }  
 
   final List<Tab> tmTabs = <Tab>[
@@ -41,7 +58,7 @@ class DetailPageState extends State<DetailPage> with SingleTickerProviderStateMi
           Container(
             padding: EdgeInsets.all(5.0),
             height: 200.0,
-            child: Image.network('https://img.32.cn/Public/Images/201703/20170302125435-4105.jpg',fit: BoxFit.fill)
+            child: Image.network(tmData['TmImg'],fit: BoxFit.fill)
           ),                    
         ],
     );
@@ -54,17 +71,16 @@ Widget detailRow() {
       width: MediaQuery.of(context).size.width,
       child:
     ListView(children: <Widget>[
-      ListTile(leading: Text('注册号：'),title: Text('222587155',style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('注册号：'),title: Text(tmData['RegNo'],style: TextStyle(color:Colors.grey))),
       Divider(height: 1.0,color: Colors.grey),
-      ListTile(leading: Text('初审公告期号：'),title: Text('1579',style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('初审公告期号：'),title: Text(tmData['RegIssue'],style: TextStyle(color:Colors.grey))),
       Divider(height: 1.0,color: Colors.grey),
-      ListTile(leading: Text('注册公告期号：'),title: Text('1579',style: TextStyle(color:Colors.grey))),
-      ListTile(leading: Text('注册公告日期：'),title: Text('2017-12-01',style: TextStyle(color:Colors.grey))),
-      ListTile(leading: Text('专用权期限：'),title: Text('2018-01-02至2019-02-05',style: TextStyle(color:Colors.grey))),
-      ListTile(leading: Text('商标类型：'),title: Text('中文商标',style: TextStyle(color:Colors.grey))),
-      ListTile(leading: Text('类似群组：'),title: Text('3401,3401,3401,3401,3401,3401,3401,3401,3401,3401',style: TextStyle(color:Colors.grey))),
-      ListTile(leading: Text('使用范围：'),title: Text('咖啡,茶,茶饮料,糖果,蜂蜜,糕点,方便面,玉米花,冰淇淋,调味品',style: TextStyle(color:Colors.grey))),
-
+      ListTile(leading: Text('注册公告期号：'),title: Text(tmData['RegIssue'],style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('注册公告日期：'),title: Text(tmData['RegDate'],style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('专用权期限：'),title: Text(tmData['PrivateDate'],style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('商标类型：'),title: Text(tmData['TypeName'],style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('类似群组：'),title: Text(tmData['GroupId'],style: TextStyle(color:Colors.grey))),
+      ListTile(leading: Text('使用范围：'),title: Text(tmData['UseRange'],style: TextStyle(color:Colors.grey))),
     ])
     )
   ]);
@@ -187,22 +203,30 @@ Widget fileRow() {
       ]
   );
 }
-
+  
   @override
   Widget build(BuildContext context) {
+    if( tmData == null) {
+      return new Center(
+        child: new CircularProgressIndicator()
+      );
+    } else {
     return 
     new 
     Scaffold(    
-      bottomNavigationBar: BottomBar(),
+      appBar: new AppBar(
+        title: Text('商标详情'),        
+      ),
+      bottomNavigationBar: BottomBar(tmId: tmData['Id'],mobile: tmData['Mobile'],),
       body: 
         new ListView(children: <Widget>[
           tmPicRow(),
           Divider(height: 10.0,color: Colors.grey),
-          ListTile(leading: Text('商标名称：'),title: Text('优米-泰迪')),
+          ListTile(leading: Text('商标名称：'),title: Text(tmData['TmName'])),
           Divider(height: 1.0,color: Colors.grey),
-          ListTile(leading: Text('商标分类：'),title: Text('第43类 餐饮住所')),
+          ListTile(leading: Text('商标分类：'),title: Text('第${tmData['Type']}类 ${tmData['Category']}')),
           Divider(height: 1.0,color: Colors.grey),
-          ListTile(leading: Text('商标服务：'),title: Text('4301,4302,4303,4303,4303,4303,4303,4303')),
+          ListTile(leading: Text('商标服务：'),title: Text('${tmData['GroupId']}')),
           Divider(height: 10.0,color: Colors.grey),                  
           Container(
             color: new Color(0xfff4f5f6),
@@ -230,15 +254,13 @@ Widget fileRow() {
                           case '详细信息':return detailRow();        
                           case '交易流程':return timeRow();        
                           case '所需材料':return fileRow();        
-                        }
-                      
+                        }                      
                       }).toList(),
                     )
                   )        
         ]
         )
     );
-                            
-             
+    }                                    
   }
 }

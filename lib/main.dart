@@ -14,12 +14,14 @@ void main() {
      new MaterialApp(
       title: 'app',
       theme: new ThemeData(
+        backgroundColor: new Color.fromRGBO(244, 245, 245, 1.0),
+        scaffoldBackgroundColor:  new Color.fromRGBO(244, 245, 245, 1.0),
         //primaryColor:Colors.lightBlueAccent,
       ),
-      //home: new MyApp(),
+      home: new MyApp(),
       //home: new MessagePage(),
       //home: new DetailPage(),
-      home: new NewsPage(),
+      //home: new NewsPage(),
       //home: new WebView(url: 'https://www.22.cn')
     ),
   );
@@ -38,11 +40,11 @@ class MyAppState extends State<MyApp> {
     new BottomNavigationBarItem(
       //icon: Icon(CupertinoIcons.group),
       icon: Icon(CupertinoIcons.collections),
-      title: Text('列表')
+      title: Text('商标')
     ),
     new BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.search),
-      title: Text('发现')
+      title: Text('资讯')
     ),
     new BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.profile_circled),
@@ -50,9 +52,9 @@ class MyAppState extends State<MyApp> {
     ),
   ];
   final List tabBodies = [
-    new DetailPage(),
-    new TmListPage(),
     new HomePage(),
+    new TmListPage(),
+    new NewsPage(),
     //new Home(),
     new HomePage()
   ];
