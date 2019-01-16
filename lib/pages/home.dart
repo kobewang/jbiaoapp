@@ -27,44 +27,44 @@ class HomePageState extends State<HomePage> {
   ];
   List tabNavList = [
     {
-      'img':'https://github.com/luhenchang/flutter_study/blob/master/images/longnv5.jpeg?raw=true',
-      'name':'域名',
+      'img':'images/tab_buy.png',
+      'name':'买商标',
       'path':''
     },
     {
-      'img':'https://img.yms.cn/tabicon/设计师.png',
-      'name':'商标',
+      'img':'images/tab_sell.png',
+      'name':'卖商标',
       'path':''
     },
     {
-      'img':'https://img.yms.cn/tabicon/制作加工.png',
-      'name':'专利',
+      'img':'images/tab_zhang.png',
+      'name':'代理记账',
       'path':''
     },
     {
-      'img':'https://img.yms.cn/tabicon/染色.png',
-      'name':'抢注',
+      'img':'images/tab_patent.png',
+      'name':'申请专利',
       'path':''
     }
     ,
     {
-      'img':'https://img.yms.cn/tabicon/店铺.png',
-      'name':'拍卖',
+      'img':'images/tab_query.png',
+      'name':'商标查询',
       'path':''
     },
     {
-      'img':'https://img.yms.cn/tabicon/店铺.png',
-      'name':'拍卖',
+      'img':'images/tab_write.png',
+      'name':'我要出售',
       'path':''
     },
     {
-      'img':'https://img.yms.cn/tabicon/店铺.png',
-      'name':'拍卖',
+      'img':'images/tab_types.png',
+      'name':'商标分类',
       'path':''
     },
     {
-      'img':'https://img.yms.cn/tabicon/店铺.png',
-      'name':'拍卖',
+      'img':'images/tab_about.png',
+      'name':'关于集标',
       'path':''
     }
   ] ;  
@@ -179,7 +179,8 @@ class HomePageState extends State<HomePage> {
               child: new SizedBox(                
                 width: 40.0,
                 height: 40.0,
-                child: new Image.network(tabNavList[index]['img'],fit:BoxFit.fill),                                          
+                //child: new Image.network(tabNavList[index]['img'],fit:BoxFit.fill),                                          
+                child: Image.asset(tabNavList[index]['img'],fit:BoxFit.fill,color: Colors.blue),
               )
             ),                                      
             new Text(tabNavList[index]['name'],style: TextStyle(color: Color(0xFF757575),fontSize: 13.0,fontWeight: FontWeight.bold))                                      
@@ -188,7 +189,26 @@ class HomePageState extends State<HomePage> {
         //margin: new EdgeInsets.only(left: 15.0,right: 15.0,bottom: 1.0,top: 1.0),
       ),
     );
-  }        
+  }
+  //交易流程  
+  Widget tranProcess() {
+    return Container(
+      color: Colors.white,
+      height: 180.0,
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Row(                        
+            children: <Widget>[
+              Container(width: 6.0, height: 12.0, color: Colors.blue),
+              Text('交易流程  /TRANSACTION PROCESS',style: TextStyle(fontSize: 12.0))
+            ],
+          ),
+          Expanded(child: Image.asset('images/steps1.png',fit: BoxFit.fill))          
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -235,6 +255,7 @@ class HomePageState extends State<HomePage> {
                     bannerWidget(),
                     staticWidget(),
                     gridtabWidget(),
+                    tranProcess(),
                     new Container(
                       height: 300.0,
                       child: new CarouselSlider(

@@ -48,6 +48,17 @@ flutter:
   assets:
     - images/ic_nav_discover_normal.png
     - images/wechat.png
+    - images/tab_buy.png
+    - images/tab_about.png
+    - images/tab_honor.png
+    - images/tab_patent.png
+    - images/tab_query.png
+    - images/tab_reg.png
+    - images/tab_sell.png
+    - images/tab_types.png
+    - images/tab_zhang.png
+    - images/tab_write.png
+    - images/steps1.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
