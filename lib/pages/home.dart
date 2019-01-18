@@ -1,30 +1,24 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:jbiaoapp/config/api.dart';
+import 'package:jbiaoapp/util/NetUtils.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import 'package:jbiaoapp/widgets/searchbar.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:jbiaoapp/widgets/safetyservice.dart';
+import 'package:jbiaoapp/widgets/carousel.dart';
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState()=> HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
-  List bannerList = [
-    {
-    'img':'https://upimg.22.cn/show//ad/20180823/0-20180823163529550.jpg',
-    'url':'https://www.22.cn'
-    },
-    {
-    'img':'https://www.22.cn/UserFiles2014/image/zixun/20181010vip_am.jpg',
-    'url':'https://www.22.cn'
-    },
-    {
-    'img':'https://yun.22.cn/Yun2016/img/banner350.jpg',
-    'url':'https://www.22.cn'
-    },
-  ];
+  List bannerList = [];
+  String staticVisits="";
+  String staticTmSum="";
+  String staticSettled="";
   List tabNavList = [
     {
       'img':'images/tab_buy.png',
@@ -89,25 +83,43 @@ class HomePageState extends State<HomePage> {
   void _onOffsetCallback(bool isUp, double offset) {
     // if you want change some widgets state ,you should rewrite the callback
   }
+  getAdList() {
+    String url = Api.INDEXAD;
+    NetUtils.post(url, null).then((data){
+      setState(() {
+          bannerList = json.decode(data)['Data']['List'];
+          staticVisits = json.decode(data)['Data']['Static']['Visits'];
+          staticTmSum = json.decode(data)['Data']['Static']['TmSum'];
+          staticSettled = json.decode(data)['Data']['Static']['Settled'];
+      });
+    });
+  }
   @override
   void initState() {      
       _refreshController = new RefreshController();
+      getAdList();
       super.initState();
     }
   //轮播baner  
   Widget bannerWidget() {
-    return new Container(
-      height: 150.0,
-      color: Colors.white,
-      margin: EdgeInsets.only(bottom: 5.0),
-      child: new Swiper(itemBuilder: (BuildContext context, int index) {                            
-        return new Image.network(bannerList[index]['img'],fit: BoxFit.fill,);
-      },
-      pagination: new SwiperPagination(),
-      control: new SwiperControl(), 
-      itemCount: 3
-      )
-    );
+    if(bannerList.length == 0) {
+      return new Center(
+        child: new CircularProgressIndicator(),
+      );
+    } else {
+      return new Container(
+        height: 150.0,
+        color: Colors.white,
+        margin: EdgeInsets.only(bottom: 5.0),
+        child: new Swiper(itemBuilder: (BuildContext context, int index) {                            
+          return new Image.network(bannerList[index]['AdImg'],fit: BoxFit.fill,);
+        },
+        pagination: new SwiperPagination(),
+        control: new SwiperControl(), 
+        itemCount: bannerList.length
+        )
+      );
+    }
   }
   //统计行
   Widget staticWidget() {
@@ -121,21 +133,21 @@ class HomePageState extends State<HomePage> {
           new Column(children: <Widget>[                        
               new Row(
                 children: <Widget>[
-                  new Text('总浏览量:'),new Text('26.4w', style: TextStyle(color:Color(0xFFFFA500)))
+                  new Text('总浏览量:'),new Text(staticVisits, style: TextStyle(color:Color(0xFFFFA500)))
                 ],
               )                                                              
           ]),
           new Column(children: <Widget>[                        
               new Row(
                 children: <Widget>[
-                  new Text('总商标量:'),new Text('56.4w', style: TextStyle(color:Color(0xFFDB7093)))
+                  new Text('总商标量:'),new Text(staticTmSum, style: TextStyle(color:Color(0xFFDB7093)))
                 ],
               )                                                              
           ]),
           new Column(children: <Widget>[                        
               new Row(
                 children: <Widget>[
-                  new Text('总入驻量:'),new Text('1.1w', style: TextStyle(color:Color(0xFF87CEEB)))
+                  new Text('总入驻量:'),new Text(staticSettled, style: TextStyle(color:Color(0xFF87CEEB)))
                 ],
               )                                                              
           ]),
@@ -195,12 +207,16 @@ class HomePageState extends State<HomePage> {
     return Container(
       color: Colors.white,
       height: 180.0,
+      margin: EdgeInsets.only(bottom: 5.0),
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           new Row(                        
             children: <Widget>[
-              Container(width: 6.0, height: 12.0, color: Colors.blue),
+              ClipRRect(                
+                borderRadius: new BorderRadius.circular(1.0),
+                child:Container(width: 6.0, height: 12.0, color: Colors.blue,margin: EdgeInsets.only(left: 5.0,right: 5.0),)
+              ),
               Text('交易流程  /TRANSACTION PROCESS',style: TextStyle(fontSize: 12.0))
             ],
           ),
@@ -240,7 +256,7 @@ class HomePageState extends State<HomePage> {
           );
         },
         enablePullDown: true,
-        enablePullUp: true,
+        enablePullUp: false,
         controller: _refreshController,
         onRefresh: _onRefresh,            
         onOffsetChange: _onOffsetCallback,
@@ -256,35 +272,8 @@ class HomePageState extends State<HomePage> {
                     staticWidget(),
                     gridtabWidget(),
                     tranProcess(),
-                    new Container(
-                      height: 300.0,
-                      child: new CarouselSlider(
-                        items: [1,2,3,4,5].map((i) {
-                          return new Builder(
-                            builder: (BuildContext context) {
-                              return new Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: new EdgeInsets.symmetric(horizontal: 5.0),                                
-                                child: new ClipRRect(
-                                  borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
-                                  child: new Image.network('https://pic.mp.cc/upload/aggds/180912/83d0910183e530f6320e1741adb70823.jpg?imageView/2/w/1940',height: 300.0,fit:BoxFit.fill)
-                                )                                                                
-                              );
-                            },
-                          );
-                        }).toList(),
-                        height: 200.0,
-                        autoPlay: true
-                      ),
-                    ),
-                    new Container(
-                      height: 200.0,
-                      color: Colors.red,
-                    ),
-                        new Container(
-                      height: 200.0,
-                      color: Colors.red,
-                    )
+                    Carousel(),
+                    SafetyService(),                    
                   ],
                 ),
               ]
@@ -292,3 +281,4 @@ class HomePageState extends State<HomePage> {
     );    
   }
 }
+

@@ -59,6 +59,15 @@ flutter:
     - images/tab_zhang.png
     - images/tab_write.png
     - images/steps1.png
+    - images/F1_sel.png
+    - images/F1.png
+    - images/F2_sel.png
+    - images/F2.png
+    - images/F3_sel.png
+    - images/F3.png
+    - images/F4_sel.png
+    - images/F4.png
+    - images/ic_avatar_default.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

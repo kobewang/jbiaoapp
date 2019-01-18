@@ -273,7 +273,7 @@ class NewsListsState extends State<NewsLists> {
       child: item,
       onTap: () {
         Navigator.of(context).push(new MaterialPageRoute(
-          builder: (ctx) => new WebView(title: '资讯加载..',url: 'https://m.jbiao.cn/news/${id}?from=app')
+          builder: (ctx) => new WebView(title: title,url: 'https://m.jbiao.cn/news/${id}?from=app')
         ));
       }
     );      

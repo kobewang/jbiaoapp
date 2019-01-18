@@ -5,6 +5,7 @@ import 'package:jbiaoapp/pages/tmlist.dart';
 import 'package:jbiaoapp/pages/detail.dart';
 import 'package:jbiaoapp/pages/message.dart';
 import 'package:jbiaoapp/pages/news.dart';
+import 'package:jbiaoapp/pages/myinfo.dart';
 import 'package:jbiaoapp/pages/webview.dart';
 
 //void main() => runApp(MyApp());
@@ -56,7 +57,7 @@ class MyAppState extends State<MyApp> {
     new TmListPage(),
     new NewsPage(),
     //new Home(),
-    new HomePage()
+    new MyInfoPage()
   ];
   var currentIndex = 0;
   var currentPage;
