@@ -75,7 +75,12 @@ const  TYPES = [
 {"title": "45.社会法律", "id": 45},
 ];
 
+/**
+ * 商标列表页
+ */
 class TmListPage extends StatefulWidget {
+  bool isLeading = false;
+  TmListPage({Key key, this.isLeading}):super(key:key);  
   @override
   createState() => TmListPageState();
 }
@@ -302,8 +307,9 @@ class TmListPageState extends State<TmListPage> {
   var keyWords = '';
   var listData;
   var isNoMore = false;
-  final int pageSize = 10;
+  final int pageSize = 20;
   var tmType = 0;
+  var chType = -1;
   var minPrice = 0;
   var maxPrice = 0;
   var sortType = 0;
@@ -375,7 +381,7 @@ class TmListPageState extends State<TmListPage> {
     "Min": minPrice,
     "Max": maxPrice,
     "Years": 0,
-    "ChType": 0,
+    "ChType": chType,
     "ReType": "",
     "GroupIds": "",
     "SortType": sortType
@@ -455,7 +461,8 @@ class TmListPageState extends State<TmListPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: searchBar(),              
+        automaticallyImplyLeading: widget.isLeading, //隐藏leading
+        title: searchBar()          
       ),
       body: new DefaultDropdownMenuController(
         onSelected:  ({int menuIndex, int index, int subIndex, dynamic data}) {

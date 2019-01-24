@@ -9,7 +9,7 @@ class NetUtils {
         throw Exception('Failed to load post***');
       } else {
         var retBody = res.body;   
-        print(retBody);
+        //rprint(retBody);
         return retBody;
       }    
   }

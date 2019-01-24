@@ -8,6 +8,7 @@ import 'package:jbiaoapp/widgets/bottombar.dart';
 import 'package:timeline/model/timeline_model.dart';
 import 'package:timeline/timeline.dart';
 
+///商标详情页
 class DetailPage extends StatefulWidget {
   int tmId;
   DetailPage({Key key,this.tmId}) : super(key:key);

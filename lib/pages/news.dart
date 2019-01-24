@@ -8,6 +8,10 @@ import 'package:jbiaoapp/config/api.dart';
 import 'package:jbiaoapp/config/constants.dart';
 import 'package:jbiaoapp/util/NetUtils.dart';
 
+/**
+ * 资讯列表
+ */
+
 class NewsPage extends StatefulWidget {
   @override
   createState ()=> NewsPageState();

@@ -5,5 +5,6 @@ class Api {
   static final String TMDETAIL = HOST + "/tm/detail";
   static final String GROUP = HOST + "/tm/group/json";
   static final String INDEXAD = HOST + "/tm/ad/swiper";
+  static final String VERSION = HOST + "/tm/app/version";
 
 }

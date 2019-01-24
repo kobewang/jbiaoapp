@@ -3,12 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:jbiaoapp/config/api.dart';
+import 'package:jbiaoapp/pages/webview.dart';
 import 'package:jbiaoapp/util/NetUtils.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import 'package:jbiaoapp/widgets/searchbar.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:jbiaoapp/widgets/safetyservice.dart';
 import 'package:jbiaoapp/widgets/carousel.dart';
+import 'package:jbiaoapp/pages/detail.dart';
+
+/**
+ *首页
+ */
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState()=> HomePageState();
@@ -16,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List bannerList = [];
+  List carouselList = [];
   String staticVisits="";
   String staticTmSum="";
   String staticSettled="";
@@ -23,43 +30,43 @@ class HomePageState extends State<HomePage> {
     {
       'img':'images/tab_buy.png',
       'name':'买商标',
-      'path':''
+      'path':'/tmlist'
     },
     {
       'img':'images/tab_sell.png',
       'name':'卖商标',
-      'path':''
+      'path':'https://m.jbiao.cn/contact?from=app'
     },
     {
       'img':'images/tab_zhang.png',
       'name':'代理记账',
-      'path':''
+      'path':'https://m.jbiao.cn/contact?from=jizhang'
     },
     {
       'img':'images/tab_patent.png',
       'name':'申请专利',
-      'path':''
+      'path':'https://m.jbiao.cn/patent?from=jizhang'
     }
     ,
     {
       'img':'images/tab_query.png',
       'name':'商标查询',
-      'path':''
+      'path':'/tmlist'
     },
     {
       'img':'images/tab_write.png',
       'name':'我要出售',
-      'path':''
+      'path':'https://m.jbiao.cn/contact?from=app'
     },
     {
       'img':'images/tab_types.png',
       'name':'商标分类',
-      'path':''
+      'path':'https://m.jbiao.cn/xiaochengxu?from=app'
     },
     {
       'img':'images/tab_about.png',
       'name':'关于集标',
-      'path':''
+      'path':'/about'
     }
   ] ;  
   RefreshController _refreshController;    
@@ -80,17 +87,22 @@ class HomePageState extends State<HomePage> {
   void enterRefresh() {
     _refreshController.requestRefresh(true);
   }
-  void _onOffsetCallback(bool isUp, double offset) {
-    // if you want change some widgets state ,you should rewrite the callback
+  void _onOffsetCallback(bool isUp, double offset) {    
   }
   getAdList() {
     String url = Api.INDEXAD;
     NetUtils.post(url, null).then((data){
       setState(() {
-          bannerList = json.decode(data)['Data']['List'];
-          staticVisits = json.decode(data)['Data']['Static']['Visits'];
-          staticTmSum = json.decode(data)['Data']['Static']['TmSum'];
-          staticSettled = json.decode(data)['Data']['Static']['Settled'];
+        var adList = json.decode(data)['Data']['List'];
+        for(var i = 0; i < adList.length; i++){
+          if(adList[i]['Location'] == 0)
+            bannerList.add(adList[i]);
+          else if(adList[i]['Location'] == 1)
+            carouselList.add(adList[i]);
+        }          
+        staticVisits = json.decode(data)['Data']['Static']['Visits'];
+        staticTmSum = json.decode(data)['Data']['Static']['TmSum'];
+        staticSettled = json.decode(data)['Data']['Static']['Settled'];
       });
     });
   }
@@ -116,7 +128,12 @@ class HomePageState extends State<HomePage> {
         },
         pagination: new SwiperPagination(),
         control: new SwiperControl(), 
-        itemCount: bannerList.length
+        itemCount: bannerList.length,
+        autoplay: true,
+        onTap: (index){ 
+          if(bannerList[index]['RefId']>0)
+            Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new DetailPage(tmId: bannerList[index]['RefId'])));              
+        }
         )
       );
     }
@@ -170,8 +187,7 @@ class HomePageState extends State<HomePage> {
           childAspectRatio: 1.5 //宽高比
         ),        
         padding: EdgeInsets.only(top: 10.0),
-        itemCount: tabNavList.length,                          
-        //padding: const EdgeInsets.all(10.0),
+        itemCount: tabNavList.length,                                  
         itemBuilder: (BuildContext context,int index) {                                                        
           return gridItem(context,index);                            
         },                          
@@ -181,7 +197,14 @@ class HomePageState extends State<HomePage> {
     //图标navItem
   Widget gridItem(BuildContext context,int index) {    
      return GestureDetector(                               
-      onTap: (){},
+      onTap: (){
+        if(tabNavList[index]['path'].toString().contains('http'))
+          Navigator.of(context).push(new MaterialPageRoute(
+            builder: (ctx) => new WebView(title: tabNavList[index]['name'].toString(),url: tabNavList[index]['path'].toString())
+          ));
+        else
+        Navigator.pushNamed(context, tabNavList[index]['path'].toString());
+      },
       child: new Container(                                                 
         child: new Column(                                                                        
           mainAxisAlignment: MainAxisAlignment.start,
@@ -190,15 +213,13 @@ class HomePageState extends State<HomePage> {
               //原形裁剪
               child: new SizedBox(                
                 width: 40.0,
-                height: 40.0,
-                //child: new Image.network(tabNavList[index]['img'],fit:BoxFit.fill),                                          
+                height: 40.0,                
                 child: Image.asset(tabNavList[index]['img'],fit:BoxFit.fill,color: Colors.blue),
               )
             ),                                      
             new Text(tabNavList[index]['name'],style: TextStyle(color: Color(0xFF757575),fontSize: 13.0,fontWeight: FontWeight.bold))                                      
           ],
-        ),
-        //margin: new EdgeInsets.only(left: 15.0,right: 15.0,bottom: 1.0,top: 1.0),
+        ),        
       ),
     );
   }
@@ -229,7 +250,8 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: SearcBar(),
+        title: SearchBar(),        
+         automaticallyImplyLeading: false //隐藏leading
       ),
       body:  new Container(
         child: new SmartRefresher(
@@ -272,7 +294,7 @@ class HomePageState extends State<HomePage> {
                     staticWidget(),
                     gridtabWidget(),
                     tranProcess(),
-                    Carousel(),
+                    Carousel(picList:carouselList),
                     SafetyService(),                    
                   ],
                 ),

@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:jbiaoapp/util/util.dart';
 
+/**
+ * WebView页面
+ */
 class WebView extends StatefulWidget {
   String title;
   String url;
@@ -29,7 +33,7 @@ class WebViewState extends State<WebView> {
   @override
   Widget build(BuildContext context) {
     List<Widget> titleContent = [];
-    titleContent.add(new Text(widget.title,style:new TextStyle(color: Colors.white)));
+    titleContent.add(new Text(Util.subStr(widget.title,10,'..'),style:new TextStyle(color: Colors.white,fontSize: 14.0)));
     if (loading) 
       titleContent.add(new Container(width: 50.0));
     return new WebviewScaffold(

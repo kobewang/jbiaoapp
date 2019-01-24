@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="jbiaoapp"
+        android:label="集标网"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

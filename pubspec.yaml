@@ -27,6 +27,7 @@ dependencies:
   timeline: ^0.0.1  
   url_launcher: ^4.0.3
   flutter_swiper: ^1.1.4
+  jpush_flutter: ^0.0.8
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jbiaoapp/widgets/triangleCliper.dart';
 
+/**
+ * 我的首页
+ */
 class MyInfoPage extends StatefulWidget {
   @override
   createState () => MyInfoPageState();
@@ -69,7 +72,10 @@ Widget listTitle(IconData icon,String title) {
   return new InkWell(
     child: listItem,
     onTap: (){
-      _showDialog();
+      if(title=='关于我们')
+        Navigator.pushNamed(context, '/about');
+      else 
+        _showDialog();
     },
   ) ;     
 }

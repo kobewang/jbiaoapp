@@ -1,32 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:jbiaoapp/pages/detail.dart';
 class Carousel extends StatefulWidget {
+  List picList=[];  
   @override
+  Carousel({Key key,this.picList}):super(key:key);
   createState() => CarouselState();
 }
-Widget carouseSlider() {
+
+class CarouselState extends State<Carousel> {
+  Widget carouseSlider() {    
+  if(widget.picList.length>0){
   return new CarouselSlider(
-        items: [1,2,3,4,5].map((i) {
+        items: widget.picList.map((item) {
+          print('item:${item}');
           return new Builder(
             builder: (BuildContext context) {
-              return new Container(
-                width: MediaQuery.of(context).size.width,
-                margin: new EdgeInsets.symmetric(horizontal: 5.0),                                
-                child: new ClipRRect(
-                  borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
-                  child: new Image.network('https://pic.mp.cc/upload/aggds/180912/83d0910183e530f6320e1741adb70823.jpg?imageView/2/w/1940',height: 60.0,fit:BoxFit.fill)
-                )                                                                
-              );
+              return new GestureDetector(
+                child: new Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: new EdgeInsets.symmetric(horizontal: 5.0),                                
+                  child: new ClipRRect(
+                    borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
+                    child: new Image.network(item['AdImg'],height: 60.0,fit:BoxFit.fill)
+                  )                                                                                
+                ),
+                onTap: (){
+                  if(item['RefId']>0)
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => new DetailPage(tmId: item['RefId'])));              
+                }
+              );              
             },
           );
         }).toList(),
         height: 100.0,
         autoPlay: true
       );
+  }
+  else {
+    return Container(child: null);
+  }
 }
-
-class CarouselState extends State<Carousel> {
   Widget build(BuildContext context) {
     return 
      new Container(
