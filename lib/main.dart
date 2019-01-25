@@ -9,7 +9,7 @@ import 'package:jbiaoapp/pages/detail.dart';
 import 'package:jbiaoapp/pages/news.dart';
 import 'package:jbiaoapp/pages/myinfo.dart';
 import 'package:jbiaoapp/pages/webview.dart';
-import 'package:jpush_flutter/jpush_flutter.dart';
+
 
 //void main() => runApp(MyApp());
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:jbiaoapp/util/util.dart';
+import 'package:jbiaoapp/widgets/baroption.dart';
 
 /**
  * WebView页面
@@ -17,14 +18,14 @@ class WebView extends StatefulWidget {
 class WebViewState extends State<WebView> {
   bool loading = true;
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
-  
+  OptionControl control = new OptionControl();
   @override
   void initState() {
     super.initState();
+    control.url = widget.url;
     flutterWebviewPlugin.onStateChanged.listen((state){
-
     });
-    flutterWebviewPlugin.onStateChanged.listen((url){
+    flutterWebviewPlugin.onStateChanged.listen((url){      
       setState(() {
         loading = false;
       });
@@ -44,6 +45,9 @@ class WebViewState extends State<WebView> {
           children: titleContent,
         ),
         iconTheme: new IconThemeData(color: Colors.white),
+        actions: <Widget>[
+          BarOptionWidget(control)
+        ],
       ),
       withZoom: true,
       withLocalStorage: true,

@@ -7,8 +7,12 @@ import 'package:jbiaoapp/util/NetUtils.dart';
 import 'package:jbiaoapp/widgets/bottombar.dart';
 import 'package:timeline/model/timeline_model.dart';
 import 'package:timeline/timeline.dart';
+import 'package:jbiaoapp/widgets/baroption.dart';
+import 'package:jbiaoapp/config/constants.dart';
 
-///商标详情页
+/**
+ *商标详情页
+ */
 class DetailPage extends StatefulWidget {
   int tmId;
   DetailPage({Key key,this.tmId}) : super(key:key);
@@ -16,6 +20,7 @@ class DetailPage extends StatefulWidget {
   createState ()=> DetailPageState();
 }
 class DetailPageState extends State<DetailPage> with SingleTickerProviderStateMixin{
+  OptionControl optionControl = new OptionControl();
   var tmData;
   TabController tabController;
     void initState() {
@@ -24,6 +29,7 @@ class DetailPageState extends State<DetailPage> with SingleTickerProviderStateMi
       length: 3,
       vsync: this
     );
+    optionControl.url = Constants.TMDETAIL_URL+widget.tmId.toString();
     getTmDetail();    
   }
 
@@ -34,7 +40,8 @@ class DetailPageState extends State<DetailPage> with SingleTickerProviderStateMi
     };
     NetUtils.post(url,postParam).then((data) {      
       setState(() {                        
-        tmData = json.decode(data)['Data'];                         
+        tmData = json.decode(data)['Data'];    
+                             
       });    
     });
   }
@@ -216,7 +223,10 @@ Widget fileRow() {
     new 
     Scaffold(    
       appBar: new AppBar(
-        title: Text('商标详情'),        
+        title: Text('商标详情'), 
+        actions: <Widget>[
+          BarOptionWidget(optionControl)
+        ],       
       ),
       bottomNavigationBar: BottomBar(tmId: tmData['Id'],mobile: tmData['Mobile'],),
       body: 

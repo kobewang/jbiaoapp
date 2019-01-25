@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jbiaoapp/config/api.dart';
+import 'package:jbiaoapp/config/constants.dart';
 import 'package:jbiaoapp/pages/home.dart';
 import 'package:jbiaoapp/pages/main.dart';
 import 'package:jbiaoapp/util/NetUtils.dart';
@@ -10,6 +10,7 @@ import 'package:jbiaoapp/widgets/skip_down_time.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:jbiaoapp/pages/webview.dart';
 import 'package:jbiaoapp/pages/detail.dart';
+import 'package:fluwx/fluwx.dart' as fluwx;
 /**
  * 欢迎页
  */
@@ -19,12 +20,12 @@ class SplashPage extends StatefulWidget {
 }
 class SplashPageState extends State<SplashPage> implements OnSkipClickListener {
    var welcomeImageUrl = 'https://www.jbiao.cn/images/news/appwelcome.jpg';
-   JPush jPush = new JPush();
+  JPush jPush = new JPush();
   String registerId;
   String myMsg;
 
   _startupJpush() {
-    jPush.setup(appKey: "c52495cbcbc37ee42f04e751", channel: "developer-default",debug: true);
+    jPush.setup(appKey: Constants.WX_APPID, channel: "developer-default",debug: true);
   }
 
   _getRegisterID() async {
@@ -77,6 +78,7 @@ class SplashPageState extends State<SplashPage> implements OnSkipClickListener {
   void initState() {
     // TODO: implement initState
     super.initState();
+    fluwx.register(appId:"wxd930ea5d5a258f4f");
     _startupJpush();
     _setPushTag();
     _addEventHandler();
