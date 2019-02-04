@@ -232,7 +232,7 @@ Widget fileRow() {
       body: 
         new ListView(children: <Widget>[
           tmPicRow(),
-          Divider(height: 10.0,color: Colors.grey),
+          Divider(height: 45.0,color: Colors.grey),
           ListTile(leading: Text('商标名称：'),title: Text(tmData['TmName'])),
           Divider(height: 1.0,color: Colors.grey),
           ListTile(leading: Text('商标分类：'),title: Text('第${tmData['Type']}类 ${tmData['Category']}')),
