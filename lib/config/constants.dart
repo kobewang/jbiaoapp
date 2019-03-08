@@ -5,4 +5,5 @@ class Constants {
   static final String DOMAIN = "https://m.jbiao.cn"; //官方网址
   static final String TMDETAIL_URL = "https://m.jbiao.cn/tm/";
   static final String APP_DOWNLOAD_URL = "https://www.jbiao.cn/app.html"; //APP下载地址
+  static final String TYPE_SEARCH_HISTORY = 'type_search_history'; //存储键名
 }

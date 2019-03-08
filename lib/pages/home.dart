@@ -50,8 +50,8 @@ class HomePageState extends State<HomePage> {
     ,
     {
       'img':'images/tab_query.png',
-      'name':'商标查询',
-      'path':'/tmlist'
+      'name':'商标注册',
+      'path':'/regtm'
     },
     {
       'img':'images/tab_write.png',
@@ -61,7 +61,7 @@ class HomePageState extends State<HomePage> {
     {
       'img':'images/tab_types.png',
       'name':'商标分类',
-      'path':'https://m.jbiao.cn/xiaochengxu?from=app'
+      'path':'/typelist'
     },
     {
       'img':'images/tab_about.png',

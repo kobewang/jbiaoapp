@@ -20,19 +20,26 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   pull_to_refresh: ^1.1.6
-  fluttertoast: ^2.2.7
+  fluttertoast: ^2.2.11 #toast弹窗
   carousel_slider: ^1.0.1
-  flutter_webview_plugin: ^0.3.0+2
-  http: ^0.12.0
-  dropdown_menu: ^1.1.1
-  timeline: ^0.0.1  
-  url_launcher: ^4.0.3
-  flutter_swiper: ^1.1.4
-  jpush_flutter: ^0.0.8
-  share: ^0.5.3
+  flutter_webview_plugin: ^0.3.0+2 #webview
+  http: ^0.12.0 #http
+  dropdown_menu: ^1.1.1 #下拉菜单
+  timeline: ^0.0.1  #时间轴
+  url_launcher: ^4.0.3 #url唤起
+  flutter_swiper: ^1.1.4 #swiper
+  jpush_flutter: ^0.0.8 #极光推送
+  share: ^0.5.3 #系统分享
   package_info: ^0.4.0
   pub_semver: ^1.4.2
-  fluwx: ^0.5.5
+  fluwx: ^0.5.5 #微信插件
+  city_pickers: ^0.1.8 #城市联动
+  image_picker: ^0.4.10 #选择图片
+  json_annotation: ^2.0.0
+  dio: ^1.0.14 #网络框架
+  connectivity: ^0.3.2 #检测网络
+  event_bus: ^1.0.1 #事件订阅
+  shared_preferences: ^0.5.1 #本地存储
   
 
 dev_dependencies:
@@ -53,29 +60,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/ic_nav_discover_normal.png
-    - images/wechat.png
-    - images/tab_buy.png
-    - images/tab_about.png
-    - images/tab_honor.png
-    - images/tab_patent.png
-    - images/tab_query.png
-    - images/tab_reg.png
-    - images/tab_sell.png
-    - images/tab_types.png
-    - images/tab_zhang.png
-    - images/tab_write.png
-    - images/steps1.png
-    - images/F1_sel.png
-    - images/F1.png
-    - images/F2_sel.png
-    - images/F2.png
-    - images/F3_sel.png
-    - images/F3.png
-    - images/F4_sel.png
-    - images/F4.png
-    - images/ic_avatar_default.png
-  #  - images/a_dot_ham.jpeg
+    - images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

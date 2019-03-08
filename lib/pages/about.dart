@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jbiaoapp/config/api.dart';
 import 'package:jbiaoapp/util/NetUtils.dart';
+import 'package:jbiaoapp/util/myDialog.dart';
 import 'package:jbiaoapp/util/util.dart';
 import 'package:jbiaoapp/widgets/baroption.dart';
 import 'package:jbiaoapp/config/constants.dart';
@@ -53,7 +54,7 @@ class AboutPageState extends State<AboutPage> {
         });
         Util.showUpdateDialog(context, versionName + ": " + releaseStr);
       } else {
-        Fluttertoast.instance.showToast(msg: '当前已是最新版');
+        MyDialog.showToast('当前已是最新版');
         setState(() {                                 
           versionStr="已是最新版";
         });

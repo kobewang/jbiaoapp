@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jbiaoapp/config/constants.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jbiaoapp/util/myDialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /**
@@ -46,13 +47,19 @@ class Util {
       return (remote - loc >= 2) ? -1 : 1;
     }
   }
-
+  ///商标类型格式化
+static String FormateType(int typeId) {
+    if(typeId<10)
+      return '0'+typeId.toString();
+    else 
+      return typeId.toString();     
+  }
 /**
  * 系统复制
  */
   static void copy(String data) {
-    Clipboard.setData(new ClipboardData(text: data));   
-    Fluttertoast.instance.showToast(msg: '复制成功');
+    Clipboard.setData(new ClipboardData(text: data));  
+    MyDialog.showToast('复制成功');
   }
 /**
  * 在浏览器中打开
@@ -61,7 +68,7 @@ static Future launchURL(String url) async {
   if (await canLaunch(url)) {
     await launch(url);
   } else {
-    Fluttertoast.instance.showToast(msg:'浏览器打开失败:'+url);
+    MyDialog.showToast('浏览器打开失败:'+url);
   }
 }
 /**
@@ -71,6 +78,15 @@ static Future launchURL(String url) async {
     if(str.length<length)
       return str;
      return str.substring(0,length-1)+hide;
+  }
+  static double _designWidth = 750.0;
+  /// 获取px等比大小
+  static double getPXSize(BuildContext context,double size) {
+    return size * (MediaQuery.of(context).size.width/_designWidth);
+  }
+  /// 截取尾字符
+  static trimEnd(String sourceStr,String trimStr) {
+    return sourceStr.substring(0,(sourceStr.length-trimStr.length));
   }
 
 }
