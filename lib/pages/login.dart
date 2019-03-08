@@ -32,6 +32,27 @@ class LoginPageState extends State<LoginPage> {
 
   String code = "";
   String dataStr = "";
+
+//微信登录
+  _loginWechat() async {
+    fluwx.sendAuth(scope: "snsapi_userinfo", state: "wechat_sdk_demo_test");
+    var respCode = "";
+    fluwx.responseFromAuth.listen((response) {
+      setState(() {
+        code = 'response:' + response.code;
+        respCode = response.code;
+        _getAcessToken(respCode);
+      });
+    });
+  }
+  //获取act
+  _getAcessToken(respCode)  async{
+    var res = await UserDao.wxOauth(respCode);
+    setState(() {
+      dataStr = '接口回调:'+res.data['Code'].toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,51 +94,10 @@ class LoginPageState extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        Column(children: <Widget>[]),
                         GestureDetector(
-                          onTap: () {
-                            fluwx.WeChatScene scene =
-                                fluwx.WeChatScene.TIMELINE;
-                            fluwx
-                                .share(WeChatShareTextModel(
-                                    text: "text from fluwx",
-                                    transaction: "transaction}",
-                                    scene: scene))
-                                .then((data) {
-                              print(data);
-                            });
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              Image.asset('images/login_icon_wechat.png'),
-                              Text('分享到微信',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(153, 153, 153, 1.0),
-                                    fontSize: Util.getPXSize(context, 26.0),
-                                    height: 1.5,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                            onTap: () async {
-                              var auth = await fluwx.sendAuth(
-                                  scope: "snsapi_userinfo",
-                                  state: "wechat_sdk_demo_test");
-                              print(auth);
-                              setState(() {
-                                code = 'code:${auth}';
-                              });
-                              await fluwx.responseFromAuth.listen((response) {
-                                setState(() {
-                                  code = 'response:' + response.code;
-                                });
-                                var res =  UserDao.wxOauth(response.code);
-                              print(res.data);
-                              setState(() {
-                                dataStr = res.data['Code'].toString();
-                              });
-                              });
-                              
+                            onTap: () {
+                              _loginWechat();
                             },
                             child: Column(children: <Widget>[
                               Image.asset('images/login_icon_wechat.png'),
@@ -128,21 +108,9 @@ class LoginPageState extends State<LoginPage> {
                                     height: 1.5,
                                   ))
                             ])),
-                        GestureDetector(
-                          onTap: (){
-                            var authcode = fluwx.sendAuth(
-                                  scope: "snsapi_userinfo",
-                                  state: "wechat_sdk_demo_test");
-                                         setState(() {
-                                  code = 'code:${authcode}';
-                              });
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              Image.asset('images/login_icon_wechat.png'),
-                            ],
-                          ),
-                        )
+                        Column(
+                          children: <Widget>[],
+                        ),
                       ],
                     )))
           ],
