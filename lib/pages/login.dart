@@ -49,7 +49,13 @@ class LoginPageState extends State<LoginPage> {
   _getAcessToken(respCode)  async{
     var res = await UserDao.wxOauth(respCode);
     setState(() {
-      dataStr = '接口回调:'+res.data['Code'].toString();
+      if(res.data['Code'].toString()=='0'){
+        //跳转到我的
+        Navigator.pushNamed(context, '/myinfo');
+      }else{
+        //手机认证，跳转到手机认证
+        Navigator.pushNamed(context, '/myinfo');
+      }
     });
   }
 

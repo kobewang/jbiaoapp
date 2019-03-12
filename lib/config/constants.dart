@@ -6,4 +6,6 @@ class Constants {
   static final String TMDETAIL_URL = "https://m.jbiao.cn/tm/";
   static final String APP_DOWNLOAD_URL = "https://www.jbiao.cn/app.html"; //APP下载地址
   static final String TYPE_SEARCH_HISTORY = 'type_search_history'; //存储键名
+  static final String APP_TOKEN = 'app_token'; //存储键名
+  static final int APP_PLAT=3;
 }

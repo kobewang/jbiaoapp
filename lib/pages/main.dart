@@ -8,6 +8,8 @@ import 'package:jbiaoapp/pages/tmlist.dart';
  * Bottom导航主页
  */
 class MainPage extends StatefulWidget {
+  int pageIndex=0;
+  MainPage({Key key,this.pageIndex}):super(key:key);
   @override
   createState ()=> MainPageState();
 }
@@ -35,13 +37,13 @@ class MainPageState extends State<MainPage> {
     new HomePage(),
     new TmListPage(isLeading: false),
     new NewsPage(),
-    //new Home(),
     new MyInfoPage()
   ];
   var currentIndex = 0;
   var currentPage;
   @override
   void initState() {      
+      currentIndex=widget.pageIndex;
       currentPage = tabBodies[currentIndex];
       super.initState();
     }

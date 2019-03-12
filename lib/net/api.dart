@@ -23,6 +23,12 @@ class HttpManager {
   static final String API_TM_MY_DETAIL = API_HOST + '/tm/my/detail';
   //登录注册
   static final String API_USER_WX_LOGIN = API_HOST + '/user/wx/login';
+  //获取验证码
+  static final String API_USER_GET_VCODE = API_HOST + '/user/getmcode';
+  //绑定手机
+  static final String API_USER_BIND_MOBILE = API_HOST + '/user/mobilebind';
+  //获取用户信息
+  static final String API_USER_GET_INFO = API_HOST + '/user/info';
 
   static Map optionParams = {
     "timeoutMs": 15000,
