@@ -40,6 +40,7 @@ dependencies:
   connectivity: ^0.3.2 #检测网络
   event_bus: ^1.0.1 #事件订阅
   shared_preferences: ^0.5.1 #本地存储
+  flutter_redux: ^0.5.3 #redux
   
 
 dev_dependencies:

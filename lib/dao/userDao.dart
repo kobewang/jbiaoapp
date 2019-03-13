@@ -1,6 +1,7 @@
 import 'package:jbiaoapp/config/constants.dart';
 import 'package:jbiaoapp/dao/dataResult.dart';
 import 'package:jbiaoapp/local/localStorage.dart';
+import 'package:jbiaoapp/model/userInfo.dart';
 import 'package:jbiaoapp/net/api.dart';
 
 /// 用户Dao
@@ -8,11 +9,12 @@ import 'package:jbiaoapp/net/api.dart';
 /// auth:wyj date:20190308
 class UserDao {
   static isLogin() async {
-    var token = await LocalStorage.get(Constants.APP_TOKEN).toString();
-    if(token!=''&&token.isNotEmpty)
+    var token = await LocalStorage.get(Constants.APP_TOKEN);
+    print('token:$token');
+    if (token != null && token.isNotEmpty)
       return true;
-    else 
-      return false; 
+    else
+      return false;
   }
 
   //微信Oauth登录
@@ -22,8 +24,8 @@ class UserDao {
         HttpManager.API_USER_WX_LOGIN, params, null, null);
     if (res != null && res.result && res.data.length > 0) {
       var data = res.data;
-      if (res.data['Code'] == '0') {
-        var token = res.data['Data'];
+      if (res.data['Code'] == 0) {
+        var token = res.data['Data'].toString();
         await LocalStorage.save(Constants.APP_TOKEN, token);
       }
       return new DataResult(data, true);
@@ -70,8 +72,8 @@ class UserDao {
         HttpManager.API_USER_BIND_MOBILE, params, null, null);
     if (res != null && res.result && res.data.length > 0) {
       var data = res.data;
-      if (res.data['Code'] == '0') {
-        await LocalStorage.save(Constants.APP_TOKEN, token);
+      if (res.data['Code'] == 0) {
+         await LocalStorage.save(Constants.APP_TOKEN, token);
       }
       return new DataResult(data, true);
     }
@@ -80,6 +82,22 @@ class UserDao {
 
   // 获取用户信息
   static getUserInfo() async {
-    
+    var token =await LocalStorage.get(Constants.APP_TOKEN);
+    var params = {
+      "Token": token,
+      "Plat": Constants.APP_PLAT,
+      "TimeStamp": 0,
+      "Sign": ""
+    };
+    print(params);
+    var res = await HttpManager.post(
+        HttpManager.API_USER_GET_INFO, params, null, null);
+    if (res != null && res.result && res.data.length > 0) {
+      var data = res.data;
+      print(data);
+      UserInfo userInfo= UserInfo.fromJson(data['Data']);
+      return new DataResult(userInfo, true);
+    }
+    return new DataResult(null, false);
   }
 }

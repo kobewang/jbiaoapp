@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jbiaoapp/dao/userDao.dart';
+import 'package:jbiaoapp/model/userInfo.dart';
 import 'package:jbiaoapp/widgets/triangleCliper.dart';
 
 /**
@@ -14,6 +15,7 @@ class MyInfoPage extends StatefulWidget {
 class MyInfoPageState extends State<MyInfoPage> {
   var titleTextStyle = new TextStyle(fontSize: 16.0);
   var isLogin = false;
+  UserInfo userInfo = null;
   @override
   initState() {
     _isLogin();
@@ -21,8 +23,16 @@ class MyInfoPageState extends State<MyInfoPage> {
   }
 
   _isLogin() async {
-    isLogin = await UserDao.isLogin();
-    print('islogin:$isLogin');
+    var uInfo;
+    var login = await UserDao.isLogin();
+    if (login) {
+      var res = await UserDao.getUserInfo();
+      uInfo = res.data;
+    }
+    setState(() {
+      isLogin = login;
+      userInfo = uInfo;
+    });
   }
 
 //头像widget
@@ -34,9 +44,11 @@ class MyInfoPageState extends State<MyInfoPage> {
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Image.asset("images/ic_avatar_default.png", width: 60.0),
+            userInfo != null
+                ? new Image.network(userInfo.headImg, width: 60.0)
+                : new Image.asset("images/ic_avatar_default.png", width: 60.0),
             new Text(
-              "点击头像登录",
+              userInfo != null ? userInfo.name : "点击头像登录",
               style: new TextStyle(color: Colors.white, fontSize: 16.0),
             ),
           ],
@@ -46,7 +58,7 @@ class MyInfoPageState extends State<MyInfoPage> {
     return new InkWell(
       child: avContainer,
       onTap: () {
-        Navigator.of(context).pushNamed('/mobile');
+        Navigator.of(context).pushNamed('/login');
       },
     );
   }
@@ -90,12 +102,12 @@ class MyInfoPageState extends State<MyInfoPage> {
     return new InkWell(
       child: listItem,
       onTap: () {
-        if (title == '关于我们')
           switch (title) {
             case '关于我们':
               Navigator.pushNamed(context, '/about');
               break;
             case '我的商标':
+            print('我的商标');
               if (isLogin) {
                 Navigator.pushNamed(context, '/my/tmlist');
               } else {

@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:jbiaoapp/config/constants.dart';
 import 'package:jbiaoapp/dao/dataResult.dart';
+import 'package:jbiaoapp/local/localStorage.dart';
 import 'package:jbiaoapp/model/mytm_detailInfo.dart';
 import 'package:jbiaoapp/model/regtmInfo.dart';
 import 'package:jbiaoapp/net/api.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /// 商标数据处理
 ///
@@ -38,6 +41,7 @@ class TmDao {
 
   //我的商标列表
   static myTmList(int pageIndex) async {
+    var token = await LocalStorage.get(Constants.APP_TOKEN);
     var params = {
       "pageRequest": {
         "LastId": 0,
@@ -46,15 +50,12 @@ class TmDao {
         "KeyWord": "",
         "PageIndex": 1
       },
-      "userRequest": {
-        "Token": "token987",
-        "Plat": 0,
-        "TimeStamp": 0,
-        "Sign": ""
-      }
+      "userRequest": {"Token": token, "Plat": Constants.APP_PLAT, "TimeStamp": 0, "Sign": ""}
     };
     var res =
         await HttpManager.post(HttpManager.API_TM_MYLIST, params, null, null);
+    print(params);
+    print(res);
     if (res != null && res.result && res.data.length > 0) {
       var data = res.data;
       return new DataResult(data, true);
@@ -64,21 +65,16 @@ class TmDao {
 
   //我的商标详情
   static myTmDetail(int tmId) async {
+    var token = await LocalStorage.get(Constants.APP_TOKEN);
     var params = {
-      "userRequest": {
-        "Token": "token987",
-        "Plat": 0,
-        "TimeStamp": 0,
-        "Sign": ""
-      },
+      "userRequest": {"Token": token, "Plat": Constants.APP_PLAT, "TimeStamp": 0, "Sign": ""},
       "Id": tmId
     };
-    var res =
-        await HttpManager.post(HttpManager.API_TM_MY_DETAIL, params, null, null);
+    var res = await HttpManager.post(
+        HttpManager.API_TM_MY_DETAIL, params, null, null);
     if (res != null && res.result && res.data.length > 0) {
       var data = res.data;
-      print(data);
-      MyTmDetailInfo myTmDetailInfo=MyTmDetailInfo.fromJson(data['Data']);
+      MyTmDetailInfo myTmDetailInfo = MyTmDetailInfo.fromJson(data['Data']);
       return new DataResult(myTmDetailInfo, true);
     }
     return new DataResult(null, false);

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluwx/fluwx.dart';
 import 'package:jbiaoapp/dao/userDao.dart';
+import 'package:jbiaoapp/pages/mobile.dart';
 import 'package:jbiaoapp/util/util.dart';
 import 'package:fluwx/fluwx.dart' as fluwx;
 
@@ -54,7 +55,7 @@ class LoginPageState extends State<LoginPage> {
         Navigator.pushNamed(context, '/myinfo');
       }else{
         //手机认证，跳转到手机认证
-        Navigator.pushNamed(context, '/myinfo');
+        Navigator.of(context).push( new MaterialPageRoute(builder: (context)=> new MobilePage(token: res.data['Data']) ));
       }
     });
   }
@@ -81,7 +82,7 @@ class LoginPageState extends State<LoginPage> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            '微信登录:${code}  dataStr:${dataStr}',
+                            '微信登录:${code}',
                             style: TextStyle(
                               color: Color.fromRGBO(153, 153, 153, 1.0),
                               fontSize: Util.getPXSize(context, 26.0),

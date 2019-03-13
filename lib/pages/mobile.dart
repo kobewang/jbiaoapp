@@ -19,7 +19,6 @@ class MobilePageState extends State<MobilePage> {
   TextEditingController _codeController = new TextEditingController();
   String mobile='';
   int mcode=0;
-  var t='644886667ccec983eb678b47b59d21732133a022e6a654b74233e5d9ff314990';
   //获取验证码
   Future<bool> _getPhoneCode() async {
     mobile=_phoneController.value.text;
@@ -31,7 +30,7 @@ class MobilePageState extends State<MobilePage> {
       MyDialog.showToast('请输入正确的手机号码');
       return false;
     }
-    var res =await UserDao.getMobileCode(mobile, t);
+    var res =await UserDao.getMobileCode(mobile, widget.token);
     print(res.data);
     if(res.data['Code'].toString()!='0') {
       MyDialog.showToast(res.data['Header']['ErrorMessage']);
@@ -52,7 +51,7 @@ class MobilePageState extends State<MobilePage> {
       MyDialog.showToast('验证码不能为空');
       return;
     }
-    var res =await UserDao.mobileBind(mobile,t,vcode,mcode);
+    var res =await UserDao.mobileBind(mobile,widget.token,vcode,mcode);
     print(res.data);
     if(res.data['Code'].toString()!='0') {
       MyDialog.showToast(res.data['Header']['ErrorMessage']);

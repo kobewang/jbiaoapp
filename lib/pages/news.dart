@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:jbiaoapp/dao/userDao.dart';
+import 'package:jbiaoapp/local/localStorage.dart';
 import 'package:jbiaoapp/pages/webview.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import 'package:jbiaoapp/config/api.dart';
@@ -114,7 +116,9 @@ class NewsListsState extends State<NewsLists> {
   }
 
   //请求API
-  getNewsList() {
+  getNewsList() async{
+    //await LocalStorage.save(Constants.APP_TOKEN, 'ddddd');
+    ///UserDao.isLogin().then((result){print(result);});
     String url = Api.NEWSLIST;    
     var postParam = 
     {

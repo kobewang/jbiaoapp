@@ -21,6 +21,7 @@ class MyTmListPageState extends State<MyTmListPage> {
   var list = [];
   var itemFontSize = 15.0;
   var totalCount = 0;
+  var isNone = false;
   RefreshController _refreshController;
   void _onRefresh(bool up) {
     if (up) {
@@ -57,24 +58,29 @@ class MyTmListPageState extends State<MyTmListPage> {
   //初始化
   void initState() {
     _refreshController = new RefreshController();
-    super.initState();
     getTmList();
+    super.initState();
   }
 
   getTmList() async {
     var res = await TmDao.myTmList(curPageIndex);
+    print(res);
     print(res.data['Data']);
     setState(() {
       totalCount = res.data['Data']['Count'];
-      list = res.data['Data']['List'];
+      if (totalCount > 0)
+        list = res.data['Data']['List'];
+      else
+        isNone = true;
     });
   }
 
   //卡片-头
   Widget rowHeader(int index) {
-    var typeId=list[index]['Type'].toString();
-    var typeName=list[index]['TypeName'].toString();
-    var leftWidget = Text('${typeId}类-${typeName}', style: TextStyle(fontSize: itemFontSize));
+    var typeId = list[index]['Type'].toString();
+    var typeName = list[index]['TypeName'].toString();
+    var leftWidget = Text('${typeId}类-${typeName}',
+        style: TextStyle(fontSize: itemFontSize));
     var rightWidget = Text(list[index]['Status'],
         style: TextStyle(fontSize: itemFontSize, color: Colors.blue));
     return rowHeaderItem(true, leftWidget, rightWidget);
@@ -174,7 +180,9 @@ class MyTmListPageState extends State<MyTmListPage> {
 
   //行-总数量
   rowCount() {
-    return   PageCount(totalCount: totalCount,);
+    return PageCount(
+      totalCount: totalCount,
+    );
   }
 
   //行-分页列表
@@ -229,6 +237,35 @@ class MyTmListPageState extends State<MyTmListPage> {
         ));
   }
 
+  //没有记录
+  noneRecord() {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(
+              top: Util.getPXSize(context, 250),
+              bottom: Util.getPXSize(context, 50)),
+          child: Image.asset('images/norecord.png'),
+        ),
+        Text('没有商标记录',
+            style: TextStyle(
+                color: Color(0xFF999999),
+                fontSize: Util.getPXSize(context, 30))),
+        Container(
+            margin: EdgeInsets.only(top: Util.getPXSize(context, 30)),
+            child: CustomButton(
+                color: Color(0xFF68a6ed),
+                text: '去注册一个',
+                widthPx: 300,
+                onPressed: () {
+                  Navigator.pushNamed(context, '/regtm');
+                }))
+      ],
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,8 +276,8 @@ class MyTmListPageState extends State<MyTmListPage> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            rowCount(),
-            Expanded(child: rowPageList())
+            !isNone ? rowCount() : Container(width: 0, height: 0),
+            Expanded(child: !isNone ? rowPageList() : noneRecord())
           ],
         ));
   }
